@@ -136,3 +136,21 @@ footer {
   opacity: 1;
   transform: translateY(0);
 }
+
+.btn-order {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #00c896;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0, 200, 150, 0.4);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-order:hover {
+  background: #00a97a;
+  transform: scale(1.05);
+}
