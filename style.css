@@ -263,8 +263,8 @@ footer {
 }
 
 .testimonial-img {
-  width: 2048px;
-  height: 1536px;
+  width: 250px;
+  height: 250px;
   border-radius: 10%;
   border: 3px solid #0032f8;
   object-fit: contain;
