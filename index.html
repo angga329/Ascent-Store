@@ -1,885 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="favicon v2.jpg">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ascent Store - Hosting Premium & Terjangkau</title>
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* ===== RESET & VARIABLES ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-    :root {
-      --primary: #00ffcc;
-      --primary-dark: #00d4aa;
-      --secondary: #0072ff;
-      --dark-bg: #0f0f1b;
-      --card-bg: #1c1c2c;
-      --text: #ffffff;
-      --text-light: #cccccc;
-      --accent: #00c6ff;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      background-color: var(--dark-bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    section {
-      padding: 80px 0;
-    }
-    /* ===== LOADING SCREEN ===== */
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--dark-bg);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-    .loading-logo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 3px solid var(--primary);
-      margin-bottom: 20px;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-    #loading-screen p {
-      color: var(--primary);
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-    .loading-bar {
-      width: 250px;
-      height: 8px;
-      background-color: #1c1c2c;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
-    }
-    .loading-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      animation: loadFill 2s ease-out forwards;
-    }
-    @keyframes loadFill {
-      from { width: 0%; }
-      to { width: 100%; }
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-    }
-    body.loaded #loading-screen {
-      opacity: 0;
-      visibility: hidden;
-    }
-    /* ===== MODAL PEMBAYARAN ===== */
-    .payment-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1001;
-      justify-content: center;
-      align-items: center;
-    }
-    .payment-modal.active {
-      display: flex;
-    }
-    .modal-content {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(0, 255, 204, 0.2);
-      animation: modalFadeIn 0.3s ease;
-    }
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .modal-header h3 {
-      color: var(--primary);
-      font-size: 1.5rem;
-    }
-    .close-modal {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 24px;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .close-modal:hover {
-      color: var(--primary);
-    }
-    .product-info {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-    .product-info h4 {
-      color: var(--primary);
-      margin-bottom: 5px;
-    }
-    .product-info p {
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-    .payment-methods {
-      margin-bottom: 25px;
-    }
-    .payment-methods h4 {
-      margin-bottom: 15px;
-      color: var(--text);
-    }
-    .payment-options {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .payment-option {
-      display: flex;
-      align-items: center;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid transparent;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .payment-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-    .payment-option.selected {
-      border-color: var(--primary);
-      background: rgba(0, 255, 204, 0.1);
-    }
-    .payment-icon {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      border-radius: 5px;
-      color: #000;
-    }
-    .dana { background: #00d4ff; }
-    .gopay { background: #00aa13; color: white; }
-    .shopeepay { background: #ff2e00; color: white; }
-    .qris { background: #ffffff; color: #000; }
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-    }
-    .btn-cancel {
-      flex: 1;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .btn-cancel:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .btn-continue {
-      flex: 2;
-      padding: 12px;
-      background: var(--primary);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .btn-continue:hover {
-      background: var(--primary-dark);
-    }
-    .btn-continue:disabled {
-      background: #666;
-      cursor: not-allowed;
-    }
-    /* ===== HEADER & NAVIGATION ===== */
-    .header {
-      background: rgba(15, 15, 27, 0.95);
-      backdrop-filter: blur(10px);
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(0, 255, 204, 0.1);
-      transition: all 0.3s ease;
-    }
-    .header.scrolled {
-      padding: 10px 0;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    }
-    .header .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo-title {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .logo {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: 2px solid var(--primary);
-    }
-    .text-brand h1 {
-      font-size: 24px;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-    .text-brand p {
-      color: var(--text-light);
-      font-size: 12px;
-    }
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-    }
-    .navbar ul li a {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 500;
-      padding: 8px 15px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-    .navbar ul li a:hover,
-    .navbar ul li a.active {
-      color: var(--primary);
-    }
-    .navbar ul li a::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      background: var(--primary);
-      transition: width 0.3s ease;
-    }
-    .navbar ul li a:hover::after,
-    .navbar ul li a.active::after {
-      width: 80%;
-    }
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 24px;
-      cursor: pointer;
-    }
-    /* ===== HERO SECTION ===== */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, #0f0f1b 0%, #1a1a2e 100%);
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.05"><polygon fill="%2300ffcc" points="0,1000 1000,0 1000,1000"/></svg>');
-      background-size: cover;
-    }
-    .hero-content {
-      max-width: 650px;
-      z-index: 2;
-      position: relative;
-    }
-    .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      line-height: 1.2;
-    }
-    .hero h1 span {
-      color: var(--primary);
-      position: relative;
-    }
-    .hero h1 span::after {
-      content: '';
-      position: absolute;
-      bottom: 5px;
-      left: 0;
-      width: 100%;
-      height: 8px;
-      background: rgba(0, 255, 204, 0.2);
-      z-index: -1;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--text-light);
-      margin-bottom: 30px;
-    }
-    .btn {
-      display: inline-block;
-      padding: 14px 32px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      color: #000;
-      font-weight: 600;
-      border-radius: 50px;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
-      border: none;
-      cursor: pointer;
-    }
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 255, 204, 0.4);
-    }
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      margin-left: 15px;
-    }
-    .btn-outline:hover {
-      background: var(--primary);
-      color: #000;
-    }
-    /* ===== SERVICES SECTION ===== */
-    .services {
-      background: #121225;
-    }
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 60px;
-      color: var(--text);
-      position: relative;
-    }
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: var(--primary);
-      border-radius: 2px;
-    }
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-    }
-    .service-card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .service-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-      border-color: rgba(0, 255, 204, 0.2);
-    }
-    .service-icon {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 20px;
-      background: rgba(0, 255, 204, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      color: var(--primary);
-    }
-    .service-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text);
-    }
-    .service-card p {
-      color: var(--text-light);
-      margin-bottom: 20px;
-    }
-    /* ===== PACKAGES SECTION ===== */
-    .packages {
-      background: var(--dark-bg);
-    }
-    .package-tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .tab-btn {
-      padding: 12px 25px;
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .tab-btn.active {
-      background: var(--primary);
-      color: #000;
-    }
-    .tab-btn:hover:not(.active) {
-      background: rgba(0, 255, 204, 0.1);
-    }
-    .package-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-    }
-    .package-card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      position: relative;
-      overflow: hidden;
-    }
-    .package-card.popular::before {
-      content: 'POPULAR';
-      position: absolute;
-      top: 20px;
-      right: -30px;
-      background: var(--primary);
-      color: #000;
-      padding: 5px 30px;
-      font-size: 12px;
-      font-weight: 700;
-      transform: rotate(45deg);
-    }
-    .package-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .package-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text);
-    }
-    .price {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
-    .price span {
-      font-size: 1rem;
-      color: var(--text-light);
-    }
-    .package-card ul {
-      list-style: none;
-      margin-bottom: 25px;
-    }
-    .package-card ul li {
-      padding: 8px 0;
-      color: var(--text-light);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .package-card ul li:last-child {
-      border-bottom: none;
-    }
-    /* ===== TESTIMONIALS SECTION ===== */
-    .testimonials-gallery {
-  padding: 40px 20px;
-  background-color: #121225;
-}
-
-.testimonials-gallery .container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start; /* dari 'center' jadi rata kiri */
-}
-
-.testimonial-img {
-  width: 280px; /* biar pas 3 gambar di 1 baris */
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 255, 204, 0.2);
-  transition: transform 0.3s ease;
-}
-
-
-.testimonial-img:hover {
-  transform: scale(1.05);
-}
-    .testimonials {
-      background: #121225;
-    }
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-    }
-    .testimonial-card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .testimonial-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .testimonial-content {
-      margin-bottom: 20px;
-      color: var(--text-light);
-      font-style: italic;
-    }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-    }
-    .author-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 15px;
-      border: 2px solid var(--primary);
-    }
-    .author-info h4 {
-      font-size: 1.1rem;
-      margin-bottom: 5px;
-    }
-    .author-info p {
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-    /* ===== FAQ SECTION ===== */
-    .faq {
-      background: var(--dark-bg);
-    }
-    .faq-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-    }
-    .faq-item {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .faq-question {
-      font-size: 1.2rem;
-      color: var(--primary);
-      margin-bottom: 10px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .faq-question::after {
-      content: '+';
-      font-size: 1.5rem;
-      transition: transform 0.3s ease;
-    }
-    .faq-item.active .faq-question::after {
-      transform: rotate(45deg); /* Rotasi tanda + menjadi tanda x jika aktif */
-    }
-    .faq-answer {
-      color: var(--text-light);
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease, padding-top 0.3s ease;
-      padding-top: 0;
-    }
-    .faq-item.active .faq-answer {
-      max-height: 150px; /* Atau sesuaikan tinggi maksimal konten */
-      padding-top: 15px;
-    }
-    /* ===== CONTACT SECTION ===== */
-    .contact {
-      background: var(--dark-bg);
-    }
-    .contact-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 50px;
-    }
-    .contact-info h3 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: var(--text);
-    }
-    .contact-info p {
-      color: var(--text-light);
-      margin-bottom: 30px;
-    }
-    .contact-details {
-      margin-bottom: 30px;
-    }
-    .contact-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .contact-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(0, 255, 204, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 15px;
-      color: var(--primary);
-    }
-    .contact-form {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 30px;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text);
-      font-weight: 500;
-    }
-    .form-control {
-      width: 100%;
-      padding: 12px 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: var(--text);
-      transition: all 0.3s ease;
-    }
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(0, 255, 204, 0.2);
-    }
-    textarea.form-control {
-      min-height: 120px;
-      resize: vertical;
-    }
-    /* ===== FOOTER ===== */
-    .footer {
-      background: #0a0a14;
-      padding: 60px 0 30px;
-    }
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 40px;
-      margin-bottom: 40px;
-    }
-    .footer-col h4 {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: var(--text);
-      position: relative;
-    }
-    .footer-col h4::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      width: 40px;
-      height: 2px;
-      background: var(--primary);
-    }
-    .footer-col ul {
-      list-style: none;
-    }
-    .footer-col ul li {
-      margin-bottom: 10px;
-    }
-    .footer-col ul li a {
-      color: var(--text-light);
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .footer-col ul li a:hover {
-      color: var(--primary);
-      padding-left: 5px;
-    }
-    .social-links {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .social-links a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      color: var(--text);
-      transition: all 0.3s ease;
-    }
-    .social-links a:hover {
-      background: var(--primary);
-      color: #000;
-      transform: translateY(-3px);
-    }
-    .footer-bottom {
-      text-align: center;
-      padding-top: 30px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-    /* ===== RESPONSIVE STYLES ===== */
-    @media (max-width: 992px) {
-      .hero h1 {
-        font-size: 2.8rem;
-      }
-      .navbar ul {
-        gap: 15px;
-      }
-      .payment-options {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 768px) {
-      .header .container {
-        flex-direction: column;
-        gap: 15px;
-      }
-      .navbar ul {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-      .hero p {
-        font-size: 1rem;
-      }
-      .btn-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-      }
-      .btn-outline {
-        margin-left: 0;
-      }
-      .section-title {
-        font-size: 2rem;
-      }
-      .modal-content {
-        width: 95%;
-        padding: 20px;
-      }
-    }
-    @media (max-width: 576px) {
-      .mobile-menu-btn {
-        display: block;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-      }
-      .navbar {
-        display: none;
-        width: 100%;
-        margin-top: 15px;
-      }
-      .navbar.active {
-        display: block;
-      }
-      .navbar ul {
-        flex-direction: column;
-        gap: 10px;
-      }
-      .hero h1 {
-        font-size: 1.8rem;
-      }
-      .package-tabs {
-        flex-direction: column;
-        align-items: center;
-      }
-      .tab-btn {
-        width: 100%;
-        max-width: 250px;
-      }
-      .modal-actions {
-        flex-direction: column;
-      }
-    }
-  </style>
 </head>
 <body>
   <!-- Loading Screen -->
   <div id="loading-screen">
-    <img src="logo.jpg" alt="Logo" class="loading-logo">
+    <img src="logo v2.jpg" alt="Logo" class="loading-logo">
     <p>Loading Ascent Store...</p>
     <div class="loading-bar">
       <div class="loading-fill"></div>
@@ -900,19 +32,23 @@
         <h4>Metode Pembayaran</h4>
         <div class="payment-options">
           <div class="payment-option" data-method="Dana">
-            <div class="payment-icon dana">D</div>
+            <img src="dana.jpg" class="payment-icon">
+            <!--<div class="payment-icon dana">D</div>-->
             <span>Dana</span>
           </div>
           <div class="payment-option" data-method="Gopay">
-            <div class="payment-icon gopay">G</div>
+            <img src="gopay.jpg" class="payment-icon">
+            <!--<div class="payment-icon gopay">G</div>-->
             <span>Gopay</span>
           </div>
           <div class="payment-option" data-method="Shopeepay">
-            <div class="payment-icon shopeepay">S</div>
+            <img src="shopee.jpg" class="payment-icon">
+            <!--<div class="payment-icon shopeepay">S</div>-->
             <span>Shopeepay</span>
           </div>
           <div class="payment-option" data-method="QRIS">
-            <div class="payment-icon qris">QR</div>
+            <img src="qris.jpg" class="payment-icon">
+            <!--<div class="payment-icon qris">QR</div>-->
             <span>QRIS</span>
           </div>
         </div>
@@ -927,7 +63,7 @@
   <header class="header">
     <div class="container">
       <div class="logo-title">
-        <img src="logo.jpg" alt="Logo Ascent Store" class="logo">
+        <img src="logo v2.jpg" alt="Logo Ascent Store" class="logo">
         <div class="text-brand">
           <h1>Ascent Store</h1>
           <p>Hosting Premium & Terjangkau</p>
@@ -989,12 +125,15 @@
   <!-- Packages Section -->
   <section class="packages" id="packages">
     <div class="container">
-      <h2 class="section-title">Paket Hosting</h2>
-      <div class="package-tabs">
-        <button class="tab-btn active" data-tab="vps">RDP/VPS</button>
-        <button class="tab-btn" data-tab="samp">Hosting SAMP</button>
-        <button class="tab-btn" data-tab="wa">Hosting WhatsApp</button>
-      </div>
+      <h2 class="section-title">List Ascent Store</h2>
+    <div class="package-tabs">
+      <button class="tab-btn active" data-tab="vps">RDP/VPS</button>
+      <button class="tab-btn" data-tab="samp">Hosting SAMP</button>
+      <button class="tab-btn" data-tab="wa">Hosting WhatsApp</button>
+      <button class="tab-btn" data-tab="pterodactyl">Create Pterodactyl</button>
+      <div class="tab-underline"></div>
+    </div>
+
       <!-- VPS Packages -->
       <div class="package-content" id="vps-packages">
         <div class="package-grid">
@@ -1105,6 +244,26 @@
           </div>
         </div>
       </div>
+      <!--Install Panel pterodactyl-->
+      <!--Install Panel pterodactyl-->
+      <div class="package-content" id="pterodactyl-packages" style="display: none;">
+        <div class="package-grid">
+          <div class="package-card">
+            <h3>Create Panel Pterodactyl</h3>
+            <p class="price">Rp 50.000<span>/bulan</span></p>
+            <ul>
+              <li>Free Install Panel Pterodactyl</li>
+              <li>Free Install Wigs/Node</li>
+              <li>Free Install Database</li>
+              <li>Free Install PHPMyAdmin</li>
+              <li>Free Domain</li>
+              <li>Free Egg Samp/Node Js</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Create Pterodactyl" data-price="50000">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+      <!--Install Hosting-->
       <!-- WA Packages (hidden by default) -->
       <div class="package-content" id="wa-packages" style="display: none;">
         <div class="package-grid">
@@ -1164,8 +323,7 @@
       <img src="WhatsApp Image 2025-07-21 at 11.25.34.jpeg" alt="Testimoni 3" class="testimonial-img">
       <img src="WhatsApp Image 2025-07-18 at 02.58.26.jpeg" alt="Testimoni 4" class="testimonial-img">
       <img src="WhatsApp Image 2025-07-17 at 05.51.51.jpeg" alt="Testimoni 5" class="testimonial-img">
-      <img src="WhatsApp Image 2025-07-10 at 12.39.32.jpeg" alt="Testimoni 6" class="testimonial-img"
-      <!-- Tambahkan gambar lainnya sesuai kebutuhan -->
+      <img src="WhatsApp Image 2025-07-10 at 12.39.32.jpeg" alt="Testimoni 6" class="testimonial-img">
     </div>
   </section>
   <!-- FAQ Section -->
@@ -1220,7 +378,7 @@
               <div class="contact-icon">✉️</div>
               <div>
                 <h4>Email</h4>
-                <p>support@ascentstore.com</p>
+                <p>ascent.store1@gmail.com</p>
               </div>
             </div>
             <div class="contact-item">
@@ -1336,6 +494,678 @@
         document.getElementById(`${tabId}-packages`).style.display = 'block';
       });
     });
+    tabBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove active class from all buttons
+      tabBtns.forEach(b => b.classList.remove('active'));
+      // Add active class to clicked button
+      this.classList.add('active');
+      // Hide all package contents
+      packageContents.forEach(content => {
+        content.style.display = 'none';
+      });
+      // Show selected package content
+      const tabId = this.getAttribute('data-tab');
+      document.getElementById(`${tabId}-packages`).style.display = 'block';
+    });
+  });
+
+  const underline = document.querySelector('.tab-underline');
+
+  function moveUnderline() {
+    const activeBtn = document.querySelector('.tab-btn.active');
+    if (activeBtn) {
+      const rect = activeBtn.getBoundingClientRect();
+      const parentRect = activeBtn.parentElement.getBoundingClientRect();
+      underline.style.width = `${rect.width}px`;
+      underline.style.left = `${rect.left - parentRect.left}px`;
+    }
+  }
+
+  // Jalankan saat load dan setiap klik tab
+  moveUnderline();
+  window.addEventListener('resize', moveUnderline);
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      moveUnderline();
+    });
+  });
+
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          // Close mobile menu if open
+          navbar.classList.remove('active');
+        }
+      });
+    });
+    // Contact form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Terima kasih! Pesan Anda telah berhasil dikirim. Kami akan menghubungi Anda segera.');
+      this.reset();
+    });
+    // ===== PAYMENT MODAL FUNCTIONALITY =====
+    const paymentModal = document.getElementById('paymentModal');
+    const closeModal = document.querySelector('.close-modal');
+    const cancelBtn = document.querySelector('.btn-cancel');
+    const continueBtn = document.querySelector('.btn-continue');
+    const paymentOptions = document.querySelectorAll('.payment-option');
+    const modalProductName = document.getElementById('modalProductName');
+    const modalProductPrice = document.getElementById('modalProductPrice');
+    const buyButtons = document.querySelectorAll('.btn-pesan');
+    let selectedProduct = null;
+    let selectedPaymentMethod = null;
+    // Open modal when buy button is clicked
+    buyButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+        selectedProduct = {
+          name: productName,
+          price: productPrice
+        };
+        modalProductName.textContent = productName;
+        modalProductPrice.textContent = `Harga: Rp ${parseInt(productPrice).toLocaleString('id-ID')}`;
+        // Reset payment selection
+        paymentOptions.forEach(option => option.classList.remove('selected'));
+        continueBtn.disabled = true;
+        selectedPaymentMethod = null;
+        // Show modal
+        paymentModal.classList.add('active');
+      });
+    });
+    // Select payment method
+    paymentOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        paymentOptions.forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedPaymentMethod = this.getAttribute('data-method');
+        continueBtn.disabled = false;
+      });
+    });
+    // Close modal
+    function closePaymentModal() {
+      paymentModal.classList.remove('active');
+    }
+    closeModal.addEventListener('click', closePaymentModal);
+    cancelBtn.addEventListener('click', closePaymentModal);
+    // Continue to WhatsApp
+    continueBtn.addEventListener('click', function() {
+      if (selectedProduct && selectedPaymentMethod) {
+        const message = `Halo, saya ingin membeli ${selectedProduct.name} dengan harga Rp ${parseInt(selectedProduct.price).toLocaleString('id-ID')} dengan metode pembayaran ${selectedPaymentMethod}.`;
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/6285780339800?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
+        closePaymentModal();
+      }
+    });
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+      if (e.target === paymentModal) {
+        closePaymentModal();
+      }
+    });
+    // ===== FAQ ACCORDION =====
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('active');
+        // Jika ingin hanya satu item yang terbuka pada satu waktu:
+        // document.querySelectorAll('.faq-item').forEach(i => {
+        //   if (i !== item) i.classList.remove('active');
+        // });
+      });
+    });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <link rel="icon" type="image/png" href="favicon v2.jpg">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ascent Store - Hosting Premium & Terjangkau</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <img src="logo v2.jpg" alt="Logo" class="loading-logo">
+    <p>Loading Ascent Store...</p>
+    <div class="loading-bar">
+      <div class="loading-fill"></div>
+    </div>
+  </div>
+  <!-- Payment Modal -->
+  <div class="payment-modal" id="paymentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Pilih Metode Pembayaran</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="product-info">
+        <h4 id="modalProductName">Nama Produk</h4>
+        <p id="modalProductPrice">Harga: Rp 0</p>
+      </div>
+      <div class="payment-methods">
+        <h4>Metode Pembayaran</h4>
+        <div class="payment-options">
+          <div class="payment-option" data-method="Dana">
+            <img src="dana.jpg" class="payment-icon">
+            <!--<div class="payment-icon dana">D</div>-->
+            <span>Dana</span>
+          </div>
+          <div class="payment-option" data-method="Gopay">
+            <img src="gopay.jpg" class="payment-icon">
+            <!--<div class="payment-icon gopay">G</div>-->
+            <span>Gopay</span>
+          </div>
+          <div class="payment-option" data-method="Shopeepay">
+            <img src="shopee.jpg" class="payment-icon">
+            <!--<div class="payment-icon shopeepay">S</div>-->
+            <span>Shopeepay</span>
+          </div>
+          <div class="payment-option" data-method="QRIS">
+            <img src="qris.jpg" class="payment-icon">
+            <!--<div class="payment-icon qris">QR</div>-->
+            <span>QRIS</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel">Batal</button>
+        <button class="btn-continue" disabled>Lanjutkan ke WhatsApp</button>
+      </div>
+    </div>
+  </div>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo-title">
+        <img src="logo v2.jpg" alt="Logo Ascent Store" class="logo">
+        <div class="text-brand">
+          <h1>Ascent Store</h1>
+          <p>Hosting Premium & Terjangkau</p>
+        </div>
+      </div>
+      <button class="mobile-menu-btn">☰</button>
+      <nav class="navbar">
+        <ul>
+          <li><a href="#home" class="active">Beranda</a></li>
+          <li><a href="#services">Layanan</a></li>
+          <li><a href="#packages">Paket</a></li>
+          <li><a href="#testimonials-gallery">Testimoni</a></li>
+          <li><a href="#faq">FAQ</a></li> <!-- Tautan ke FAQ -->
+          <li><a href="#contact">Kontak</a></li>
+          <li><a href="https://wa.me/6285780339800" target="_blank" class="btn">Pesan Sekarang</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Hosting Terbaik untuk <span>Kebutuhan Digital</span> Anda</h1>
+        <p>Dapatkan layanan hosting tercepat dengan harga terjangkau. Dukungan 24/7, uptime 99.9%, dan teknologi terkini untuk website dan aplikasi Anda.</p>
+        <div class="btn-container">
+          <a href="#packages" class="btn">Lihat Paket</a>
+          <a href="#contact" class="btn btn-outline">Konsultasi Gratis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Services Section -->
+  <section class="services" id="services">
+    <div class="container">
+      <h2 class="section-title">Layanan Kami</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">🖥️</div>
+          <h3>RDP/VPS</h3>
+          <p>Server virtual dengan performa tinggi untuk kebutuhan hosting yang lebih kompleks dan fleksibel.</p>
+          <a href="#packages" class="btn">Lihat Paket</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🎮</div>
+          <h3>Hosting SAMP</h3>
+          <p>Hosting khusus untuk server game San Andreas Multiplayer dengan performa optimal dan stabil.</p>
+          <a href="#packages" class="btn">Lihat Paket</a>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🤖</div>
+          <h3>Hosting WhatsApp Bot</h3>
+          <p>Hosting khusus untuk bot WhatsApp dengan resource yang disesuaikan untuk kebutuhan otomasi.</p>
+          <a href="#packages" class="btn">Lihat Paket</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Packages Section -->
+  <section class="packages" id="packages">
+    <div class="container">
+      <h2 class="section-title">List Ascent Store</h2>
+    <div class="package-tabs">
+      <button class="tab-btn active" data-tab="vps">RDP/VPS</button>
+      <button class="tab-btn" data-tab="samp">Hosting SAMP</button>
+      <button class="tab-btn" data-tab="wa">Hosting WhatsApp</button>
+      <button class="tab-btn" data-tab="pterodactyl">Create Pterodactyl</button>
+      <div class="tab-underline"></div>
+    </div>
+
+      <!-- VPS Packages -->
+      <div class="package-content" id="vps-packages">
+        <div class="package-grid">
+          <div class="package-card">
+            <h3>RDP/VPS RAM 4GB</h3>
+            <p class="price">Rp 25.000<span>/bulan</span></p>
+            <ul>
+              <li>4GB RAM</li>
+              <li>80GB Disk</li>
+              <li>2 vCPU</li>
+              <li>Lokasi: Random</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="RDP/VPS RAM 4GB" data-price="25000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card">
+            <h3>RDP/VPS RAM 8GB</h3>
+            <p class="price">Rp 30.000<span>/bulan</span></p>
+            <ul>
+              <li>8GB RAM</li>
+              <li>120GB Disk</li>
+              <li>4 vCPU</li>
+              <li>Lokasi: Random</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="RDP/VPS RAM 8GB" data-price="30000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card popular">
+            <h3>RDP/VPS RAM 16GB</h3>
+            <p class="price">Rp 35.000<span>/bulan</span></p>
+            <ul>
+              <li>16GB RAM</li>
+              <li>200GB Disk</li>
+              <li>4 vCPU</li>
+              <li>Lokasi: Random</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="RDP/VPS RAM 16GB" data-price="35000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card">
+            <h3>RDP/VPS RAM 16GB PRO</h3>
+            <p class="price">Rp 60.000<span>/bulan</span></p>
+            <ul>
+              <li>16GB RAM</li>
+              <li>200GB Disk</li>
+              <li>8 vCPU</li>
+              <li>Lokasi: Random</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="RDP/VPS RAM 16GB PRO" data-price="60000">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+      <!-- SAMP Packages (hidden by default) -->
+      <div class="package-content" id="samp-packages" style="display: none;">
+        <div class="package-grid">
+          <div class="package-card">
+            <h3>Hosting SAMP Packet 1</h3>
+            <p class="price">Rp 5.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 10GB</li>
+              <li>CPU 100%</li>
+              <li>50 Slot Player</li>
+              <li>Wine/Linux</li>
+              <li>MySQL + PHPMyAdmin</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting SAMP Packet 1" data-price="5000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card">
+            <h3>Hosting SAMP Packet 2</h3>
+            <p class="price">Rp 10.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 20GB</li>
+              <li>CPU 200%</li>
+              <li>100 Slot Player</li>
+              <li>Wine/Linux</li>
+              <li>MySQL + PHPMyAdmin</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting SAMP Packet 2" data-price="10000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card popular">
+            <h3>Hosting SAMP Packet 3</h3>
+            <p class="price">Rp 15.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 30GB</li>
+              <li>CPU 300%</li>
+              <li>150 Slot Player</li>
+              <li>Wine/Linux</li>
+              <li>MySQL + PHPMyAdmin</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting SAMP Packet 3" data-price="15000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card">
+            <h3>Hosting SAMP Packet 4</h3>
+            <p class="price">Rp 20.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 40GB</li>
+              <li>CPU 400%</li>
+              <li>200 Slot Player</li>
+              <li>Wine/Linux</li>
+              <li>MySQL + PHPMyAdmin</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting SAMP Packet 4" data-price="20000">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+      <!--Install Panel pterodactyl-->
+      <!--Install Panel pterodactyl-->
+      <div class="package-content" id="pterodactyl-packages" style="display: none;">
+        <div class="package-grid">
+          <div class="package-card">
+            <h3>Create Panel Pterodactyl</h3>
+            <p class="price">Rp 50.000<span>/bulan</span></p>
+            <ul>
+              <li>Free Install Panel Pterodactyl</li>
+              <li>Free Install Wigs/Node</li>
+              <li>Free Install Database</li>
+              <li>Free Install PHPMyAdmin</li>
+              <li>Free Domain</li>
+              <li>Free Egg Samp/Node Js</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Create Pterodactyl" data-price="50000">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+      <!--Install Hosting-->
+      <!-- WA Packages (hidden by default) -->
+      <div class="package-content" id="wa-packages" style="display: none;">
+        <div class="package-grid">
+          <div class="package-card">
+            <h3>Hosting WA Packet 1</h3>
+            <p class="price">Rp 1.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 1GB</li>
+              <li>CPU 100%</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting WA Packet 1" data-price="1000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card">
+            <h3>Hosting WA Packet 2</h3>
+            <p class="price">Rp 2.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 2GB</li>
+              <li>CPU 150%</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting WA Packet 2" data-price="2000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card popular">
+            <h3>Hosting WA Packet 5</h3>
+            <p class="price">Rp 5.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk 5GB</li>
+              <li>CPU 300%</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting WA Packet 5" data-price="5000">Pesan Sekarang</button>
+          </div>
+          <div class="package-card">
+            <h3>Hosting WA Packet 10</h3>
+            <p class="price">Rp 10.000<span>/bulan</span></p>
+            <ul>
+              <li>Ram/Disk Unlimited</li>
+              <li>CPU Unlimited</li>
+              <li>Uptime 99.9%</li>
+              <li>Team Support 24/7</li>
+            </ul>
+            <button class="btn btn-pesan" data-name="Hosting WA Packet 10" data-price="10000">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Testimonials Section -->
+ <section class="testimonials-gallery" id="testimonials-gallery">
+    <div class="container">
+      <img src="testimoni 3.jpeg" alt="Testimoni 1" class="testimonial-img">
+      <img src="testimoni 2.jpg" alt="Testimoni 2" class="testimonial-img">
+      <img src="WhatsApp Image 2025-07-21 at 11.25.34.jpeg" alt="Testimoni 3" class="testimonial-img">
+      <img src="WhatsApp Image 2025-07-18 at 02.58.26.jpeg" alt="Testimoni 4" class="testimonial-img">
+      <img src="WhatsApp Image 2025-07-17 at 05.51.51.jpeg" alt="Testimoni 5" class="testimonial-img">
+      <img src="WhatsApp Image 2025-07-10 at 12.39.32.jpeg" alt="Testimoni 6" class="testimonial-img">
+    </div>
+  </section>
+  <!-- FAQ Section -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <h2 class="section-title">Pertanyaan Umum (FAQ)</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3 class="faq-question">Apa itu layanan hosting?</h3>
+          <p class="faq-answer">Layanan hosting menyediakan ruang dan sumber daya di server internet untuk menyimpan file website atau aplikasi Anda agar dapat diakses secara online.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Apa perbedaan RDP/VPS dan hosting biasa?</h3>
+          <p class="faq-answer">RDP (Remote Desktop Protocol) dan VPS (Virtual Private Server) memberikan Anda akses root dan kontrol penuh terhadap server virtual, sedangkan hosting biasa biasanya bersifat shared dan memiliki kontrol terbatas.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Apakah layanan support tersedia 24/7?</h3>
+          <p class="faq-answer">Ya, kami menyediakan layanan support pelanggan 24 jam sehari, 7 hari seminggu, melalui WhatsApp dan email.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Bagaimana cara memesan paket?</h3>
+          <p class="faq-answer">Anda dapat memesan paket langsung melalui tombol "Pesan Sekarang" di halaman paket kami atau menghubungi kami via WhatsApp.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Berapa lama waktu aktivasi paket?</h3>
+          <p class="faq-answer">Paket Anda akan diaktifkan secara otomatis setelah pembayaran diterima dan diverifikasi, biasanya dalam waktu kurang dari 1 jam.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Apakah bisa upgrade paket?</h3>
+          <p class="faq-answer">Ya, Anda bisa melakukan upgrade paket kapan saja sesuai kebutuhan Anda. Silakan hubungi support kami untuk proses upgrade.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <h2 class="section-title">Hubungi Kami</h2>
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>Butuh Bantuan?</h3>
+          <p>Tim support kami siap membantu Anda 24/7. Jangan ragu untuk menghubungi kami untuk konsultasi gratis atau pertanyaan tentang layanan.</p>
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">📞</div>
+              <div>
+                <h4>Telepon/WhatsApp</h4>
+                <p>+62 857-8033-9800</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">✉️</div>
+              <div>
+                <h4>Email</h4>
+                <p>ascent.store1@gmail.com</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">🕒</div>
+              <div>
+                <h4>Jam Operasional</h4>
+                <p>24/7 Setiap Hari</p>
+              </div>
+            </div>
+          </div>
+          <a href="https://wa.me/6285780339800" class="btn" target="_blank">Chat WhatsApp</a>
+        </div>
+        <div class="contact-form">
+          <h3>Kirim Pesan</h3>
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="name">Nama Lengkap</label>
+              <input type="text" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subjek</label>
+              <input type="text" id="subject" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="message">Pesan</label>
+              <textarea id="message" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn">Kirim Pesan</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h4>Ascent Store</h4>
+          <p>Penyedia layanan hosting terpercaya dengan harga terjangkau dan kualitas premium untuk berbagai kebutuhan digital.</p>
+          <div class="social-links">
+            <a href="#"><span>📘</span></a>
+            <a href="#"><span>📷</span></a>
+            <a href="#"><span>🐦</span></a>
+            <a href="#"><span>💼</span></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Layanan</h4>
+          <ul>
+            <li><a href="#packages">RDP/VPS</a></li>
+            <li><a href="#packages">Hosting SAMP</a></li>
+            <li><a href="#packages">Hosting WhatsApp</a></li>
+            <li><a href="#contact">Konsultasi Gratis</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Bantuan</h4>
+          <ul>
+            <li><a href="#contact">Kontak</a></li>
+            <li><a href="#testimonials-gallery">Testimoni</a></li>
+            <li><a href="#faq">FAQ</a></li> <!-- Tautan ke FAQ -->
+            <li><a href="#">Syarat & Ketentuan</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Ascent Store. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // Loading Screen
+    window.addEventListener("load", function () {
+      setTimeout(() => {
+        document.body.classList.add("loaded");
+      }, 2200);
+    });
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navbar = document.querySelector('.navbar');
+    mobileMenuBtn.addEventListener('click', function() {
+      navbar.classList.toggle('active');
+    });
+    // Package tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const packageContents = document.querySelectorAll('.package-content');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Remove active class from all buttons
+        tabBtns.forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        // Hide all package contents
+        packageContents.forEach(content => {
+          content.style.display = 'none';
+        });
+        // Show selected package content
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(`${tabId}-packages`).style.display = 'block';
+      });
+    });
+    tabBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove active class from all buttons
+      tabBtns.forEach(b => b.classList.remove('active'));
+      // Add active class to clicked button
+      this.classList.add('active');
+      // Hide all package contents
+      packageContents.forEach(content => {
+        content.style.display = 'none';
+      });
+      // Show selected package content
+      const tabId = this.getAttribute('data-tab');
+      document.getElementById(`${tabId}-packages`).style.display = 'block';
+    });
+  });
+
+  const underline = document.querySelector('.tab-underline');
+
+  function moveUnderline() {
+    const activeBtn = document.querySelector('.tab-btn.active');
+    if (activeBtn) {
+      const rect = activeBtn.getBoundingClientRect();
+      const parentRect = activeBtn.parentElement.getBoundingClientRect();
+      underline.style.width = `${rect.width}px`;
+      underline.style.left = `${rect.left - parentRect.left}px`;
+    }
+  }
+
+  // Jalankan saat load dan setiap klik tab
+  moveUnderline();
+  window.addEventListener('resize', moveUnderline);
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      moveUnderline();
+    });
+  });
+
+
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
